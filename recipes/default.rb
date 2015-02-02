@@ -32,6 +32,7 @@ bash 'crate_app' do
 end
 
 execute "change_permission" do
-  command  "chmod -R 775 #{roma_dir} & chown -R #{node['roma']['target_user']}:#{node['roma']['target_group']} #{roma_dir}"
+  command  "chown -R #{node['roma']['target_user']}:#{node['roma']['target_group']} #{roma_dir}"
   action :run
 end
+
