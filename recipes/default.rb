@@ -31,7 +31,8 @@ bash 'create_app' do
   EOL
 end
 
-execute "change_permission" do
+bash "change_permission" do
+  not_if "test `find #{roma_dir} -user #{node['roma']['target_user']} -group #{node['roma']['target_group']} | wc -l` -eq `find #{roma_dir} | wc -l`"
   command  "chown -R #{node['roma']['target_user']}:#{node['roma']['target_group']} #{roma_dir}"
   action :run
 end
