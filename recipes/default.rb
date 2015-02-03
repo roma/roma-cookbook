@@ -15,7 +15,7 @@ remote_file "#{src_dir}/v#{version}.tar.gz" do
 end
 
 bash 'install_roma' do
-  not_if { ::File.exist?("#{roma_dir}/roma/ruby/server/bi/romad") }
+  not_if { ::File.exist?("#{roma_dir}/ruby/server/bin/romad") }
   code <<-EOL
     cd #{src_dir}
     tar -zxvf v#{version}.tar.gz
@@ -23,7 +23,7 @@ bash 'install_roma' do
   EOL
 end
 
-bash 'crate_app' do
+bash 'create_app' do
   not_if { ::File.exist?("#{roma_dir}/#{node['roma']['app_name']}") }
   code <<-EOL
     cd #{roma_dir}
@@ -31,7 +31,9 @@ bash 'crate_app' do
   EOL
 end
 
-execute "change_permission" do
-  command  "chmod -R 775 #{roma_dir} & chown -R #{node['roma']['target_user']}:#{node['roma']['target_group']} #{roma_dir}"
+bash "change_permission" do
+  not_if "test `find #{roma_dir} -user #{node['roma']['target_user']} -group #{node['roma']['target_group']} | wc -l` -eq `find #{roma_dir} | wc -l`"
+  command  "chown -R #{node['roma']['target_user']}:#{node['roma']['target_group']} #{roma_dir}"
   action :run
 end
+

@@ -13,7 +13,6 @@ remote_file "#{src_dir}/v#{tc_ruby_version}.tar.gz" do
 end
 
 bash 'install_tc_ruby' do
-  user node['roma']['tc_ruby']['target_user']
   not_if { ::File.exist?("#{src_dir}/tokyocabinet-ruby-#{tc_ruby_version}/tokyocabinet-#{tc_ruby_version}.gem") }
   code <<-EOL
     cd #{src_dir}/
